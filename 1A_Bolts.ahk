@@ -19,7 +19,7 @@ ReadConfig(filePath) {
 }
 
 ; Read the configuration file
-config := ReadConfig(configFilePath)
+config := ReadConfig(cfp)
 
 ; Retrieve and display configuration values
 itinerario := config.ITINERARIO_URL
@@ -138,7 +138,7 @@ return
 
 	;n::
 	;{
-	;salesparse(URL_COMPANY, pwd_company)
+	;salesparse()
 	;}return
 
 	n::
@@ -149,8 +149,8 @@ return
 	b::
 	{
 	;Send {Alt}jph4.53{Enter}
-	;leafparse(URL_COMPANY, pwd_company)
-	memparse(URL_COMPANY, pwd_company)
+	;leafparse()
+	memparse()
 	}return	
 #If
 
@@ -466,7 +466,7 @@ iq05()
 	Send IQ{Enter}05{Enter}
 }
 
-leafparse(URL_COMPANY, pwd_company)
+leafparse()
 {
 	Array := []
 	filePath := A_ScriptDir "\leaf.ini"
@@ -485,7 +485,7 @@ leafparse(URL_COMPANY, pwd_company)
 		}
 }
 
-memparse(URL_COMPANY, pwd_company)
+memparse()
 {
 	Array := []
 	filePath := A_ScriptDir "\vis.ini"
@@ -506,7 +506,7 @@ memparse(URL_COMPANY, pwd_company)
 		}
 }
 
-salesparse(URL_COMPANY, pwd_company)
+salesparse()
 {
 	Array := []
 	filePath := A_ScriptDir "\salesorderno.ini"
