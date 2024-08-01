@@ -3,7 +3,7 @@ CoordMode, Mouse, Screen
 
 ;Password Manager	----------------------------------------------------------------------------------------------------
 
-configFilePath := A_ScriptDir "\pm.ini"
+cfp := A_ScriptDir "\..\pm\pm.ini"
 
 ; Function to read configuration values
 ReadConfig(filePath) {
@@ -38,6 +38,8 @@ THROWEMAIL := config.THROWEMAIL
 NAME := config.NAME
 NAMECAPS := config.NAMECAPS
 LINKEDIN := config.LINKEDIN
+GITHUB := config.GITHUB
+PORTFOLIO := config.PORTFOLIO
 
 ;Logistics		----------------------------------------------------------------------------------------------------
 #SingleInstance, Force
@@ -48,125 +50,211 @@ MsgBox,"Main Reset"
 Reload    
 Return
 
+;Caps Master		----------------------------------------------------------------------------------------------------
+
+SetCapsLockState, AlwaysOff
++CapsLock:: ;Toggling only with Shift
+    SetCapsLockState, % (GetKeyState("CapsLock", "T") ? "Off" : "On")
+return
+
+#If (GetKeyState("CapsLock", "P") && !GetKeyState("Shift", "P"))
+	g::Send {Alt}jpagg ;Group
+	u::Send {Alt}jpagu ;Ungroup
+	f::Send {Alt}jpsow{Down}{Down}{Down}{Down}{Down}{Down}{Enter} ;Frame
+	w::Send {Alt}jptwo ;Wrap Image
+	1::Send {Alt}jpaac ;Center Image
+
+	j::Send %EMAIL_COMPANY%
+	k::Send 9786947028
+	l::Send jp7283_Kovalus_()_V1
+
+	F1::
+		winmove()
+		sleep, 500
+		WinMaximize, A
+	return
+
+	x::Send {Delete}
+
+	c::
+		Send p
+		sleep,200
+		Send current{Enter}
+	return
+
+	a::Send {Alt}hfp
+	
+	r::Send {U+03A9} ;Ω
+	Right::Send {U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F872} ; 🢜🢜🢜🢜🢜🡲
+	Left::Send {U+1F870}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C} ; 🡰🢜🢜🢜🢜
+	Down::Send {U+1F873} ;🡳
+	Up::Send {U+1F871} ;🡱
+
+	i::img_ipynb()
+
+	LButton::
+		Clipboard := ""  ; Clear the clipboard
+		Send ^c  ; Copy selected text (file path) to the clipboard
+		ClipWait, 2  ; Wait up to 2 seconds for the clipboard to contain data
+		Filepath := Clipboard
+		;MsgBox, % Filepath
+		Clipboard = %Filepath%
+	Return 
+
+	^LButton::
+		Clipboard := ""  ; Clear the clipboard
+		Send ^c  ; Copy selected text (file path) to the clipboard
+		ClipWait, 2  ; Wait up to 2 seconds for the clipboard to contain data
+		Filepath := Clipboard
+		;MsgBox, % Filepath
+		Clipboard = %Filepath%
+		SplitPath, Filepath, OutFileName, OutDir  ; Split the file path into components
+		Run, %OutDir%  ; Open the folder containing the file
+	Return
+
+	^c::
+		Clipboard :=
+		Send ^c
+		Clipwait 2
+		Filepath := Clipboard
+		;MsgBox, % Filepath
+		Clipboard = %Filepath%
+	Return 
+
+	;Return 
+
+	y::Send {Alt}hffSegoe UI{Enter}
+
+	d::Send {Raw}%pwd_company%
+
+	v::openvis(URL_COMPANY, pwd_company)
+
+	m::
+	{
+	;sleep, 500
+	openvis(URL_COMPANY, pwd_company)
+	iq()
+	}return
+
+	;n::
+	;{
+	;salesparse(URL_COMPANY, pwd_company)
+	;}return
+
+	n::
+	{
+	Send c{Down}{Enter}cm
+	}Return
+
+	b::
+	{
+	;Send {Alt}jph4.53{Enter}
+	;leafparse(URL_COMPANY, pwd_company)
+	memparse(URL_COMPANY, pwd_company)
+	}return	
+#If
+
+CapsLock::Return ; Prevent Caps Lock from toggling when pressed alone
+
 ;Alpha			----------------------------------------------------------------------------------------------------
 ^+8::
-{
-sleep, 500
+sleep, 300
 Send {Alt}hu4{Right}{Enter}
-}Return
-
-RAlt & b::
-Run % "https://armstrongmetalcrafts.com/Reference/MetricTapChart.aspx"
-Return
-
-RAlt & c::
-Run % "C:\Windows_\1A_Calc_V1.ipynb"
-Return
-
-RAlt & d::
-Send %THROWPASS%
 return
 
-LAlt & d::
-Send %THROWEMAIL%
+RAlt & b::Run % "https://armstrongmetalcrafts.com/Reference/MetricTapChart.aspx"
+RAlt & c::Run % "D:\Chickenfish\Code\ScratchPad\1A_Calc.ipynb"
+
+RAlt & d::Send %THROWPASS%
+LAlt & d::Send %THROWEMAIL%
+
+#e::Run, C:\Windows\explorer.exe shell:ControlPanelFolder
+
+>!g::Send Convert each plot to use fgmk2 instead of plt. Fgmk2 is in the Customize ChatGPT section.
++>!g::Send Convert to markdown. Use '$' format for equation delimiters
+
+>!i::Run % itinerario
+
+>!j::Send jp7283
+!j::Send %NAME%
++!j::Send %NAMECAPS%
+
+#j::Send %email1%
+#^j::Send %email2%
+#!j::Send %email3%
+
+RAlt & k::Send %phone%
+
+RAlt & l::Send %LINKEDIN%
+
+RAlt & m::Send \begin{{}bmatrix{}} \end{{}bmatrix{}}
+
+>!n::Run Notepad
+^>!n::Run notepad++.exe
+
+!`::Send {U+00F1}
+
+#o::Send %email4%
+#^o::Send %email5%
+#!o::Send %email6%
+
+#q::
+	Run, C:\RootApps\bin\whats.vbs,, Hide
+	sleep, 2000
+	Send y&
+	sleep, 500
+	Send {Down}{Enter}
 return
 
->!n::
-Run Notepad
-Return
-
->!g::
-Send Convert each plot to use fgmk2 instead of plt. Fgmk2 is in the Customize ChatGPT section.
+#s::
+    Send, {LWin down}{9 down}
+    Sleep, 5
+    Send, {LWin up}{9 up}
 return
 
-+>!g::
-Send Convert to markdown. Use '$' format for equation delimiters
+; Function to get highlighted text
+GetHighlightedText()
+{
+    Clipboard := ""           ; Empty the clipboard
+    Send, ^c                  ; Copy the highlighted text
+    ClipWait, 1               ; Wait for the clipboard to contain data
+    return Clipboard
+}
+
+; Run PowerShell - FUL FILE PATH
+#T::
+{
+    path := GetHighlightedText()
+    if (path != "")
+    {
+        path := StrReplace(path, "\", "\\")
+        Run, "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -NoExit -Command "Set-Location -LiteralPath '%path%'", , RunAs
+    }
+    else
+    {
+        Run, "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+    }
+}
 return
 
-RAlt & i::
-Run % itinerario
-Return
+#u::Send {Raw}`%`%render sci_not 3
+>!u::Send {Raw}`%`%render short 3
+^>!u::Send {Raw}`%`%render long 3
++>!u::Send {Raw}`%`%render params
 
-RAlt & j::
-Send jp7283
-return
-
-!j::
-Send %NAME%
-return
-
-+!j::
-Send %NAMECAPS%
-return
-
-#j::
-Send %email1%
-Return
-
-#^j::
-Send %email2%
-Return
-
-#!j::
-Send %email3%
-Return
-
-RAlt & k::
-Send %phone%
-Return
-
-RAlt & l::
-Send %LINKEDIN%
-Return
-
-RAlt & m::
-Send \begin{{}bmatrix{}} \end{{}bmatrix{}}
-return
-
-#o::
-Send %email4%
-Return
-
-#^o::
-Send %email5%
-Return
-
-#!o::
-Send %email6%
-Return
-
-RAlt & s::
-Run % "C:Bolts.pdf"
-Return
-
-#u::
-Send {Raw}`%`%render sci_not 3
-return
-
->!u::
-Send {Raw}`%`%render short 3
-return
-
-^>!u::
-Send {Raw}`%`%render long 3
-return
-
-+>!u::
-Send {Raw}`%`%render params
-return
-
-RAlt & w::
-Send https://joaquin-paz.github.io/portfolio/
-return
+>!w::Send %PORTFOLIO%
+^>!w::Send %GITHUB%
 
 #W::
-Run % "D:\SFX\SFX_DCSB\SadViolin.mp3"
+    Send, {LWin down}{8 down}
+    Sleep, 5
+    Send, {LWin up}{8 up}
 return
 
 #z::
 FormatTime, datestring,,yyyy-MM-dd
 Send %datestring%
-Return
+return
 
 ;Text Editing		----------------------------------------------------------------------------------------------------
 
@@ -207,7 +295,7 @@ $Tab::                ;Trigger ($=no self-firing)
   If !ErrorLevel         ;  If released before
     Send {Tab Down}   ;    Say so/do stuff
   Else{                  ;  Or 'Else'...
-    Run "C:\Program Files\Everything\Everything.exe"
+    ;Run "C:\Program Files\Everything\Everything.exe"
     KeyWait Tab,T1    ;    Wait T(insert num here)s
     If ErrorLevel        ;    If NOT released in 5s
       Run Notepad.exe "C:\RootApps\bin\1A_Bolts.ahk" ;      Say so/do stuff
@@ -343,108 +431,18 @@ return
     MsgBox, % "Radians to degrees: " degrees
 return
 
+;Expanded Functions	----------------------------------------------------------------------------------------------------
 
-;Caps Master		----------------------------------------------------------------------------------------------------
-
-SetCapsLockState, AlwaysOff
-+CapsLock:: ;Toggling only with Shift
-    SetCapsLockState, % (GetKeyState("CapsLock", "T") ? "Off" : "On")
-return
-
-#If (GetKeyState("CapsLock", "P") && !GetKeyState("Shift", "P"))
-	g::Send {Alt}jpagg ;Group
-	u::Send {Alt}jpagu ;Ungroup
-	f::Send {Alt}jpsow{Down}{Down}{Down}{Down}{Down}{Down}{Enter} ;Frame
-	w::Send {Alt}jptwo ;Wrap Image
-	1::Send {Alt}jpaac ;Center Image
-
-	j::Send %EMAIL_COMPANY%
-	k::Send 9786947028
-	l::Send jp7283_Kovalus_()_V1
-
-	F1::
-		winmove()
-		sleep, 500
-		WinMaximize, A
-	return
-
-	x::Send {Delete}
-
-	c::
-		Send p
-		sleep,200
-		Send current{Enter}
-	return
-
-	a::Send {Alt}hfp
-	
-	r::Send {U+03A9} ;Ω
-	Right::Send {U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F872} ; 🢜🢜🢜🢜🢜🡲
-	Left::Send {U+1F870}{U+1F89C}{U+1F89C}{U+1F89C}{U+1F89C} ; 🡰🢜🢜🢜🢜
-	Down::Send {U+1F873} ;🡳
-	Up::Send {U+1F871} ;🡱
-
-	i::img_ipynb()
-
-	LButton::
-		Clipboard := ""  ; Clear the clipboard
-		Send ^c  ; Copy selected text (file path) to the clipboard
-		ClipWait, 2  ; Wait up to 2 seconds for the clipboard to contain data
-		Filepath := Clipboard
-		;MsgBox, % Filepath
-		Clipboard = %Filepath%
-	Return 
-
-	^LButton::
-		Clipboard := ""  ; Clear the clipboard
-		Send ^c  ; Copy selected text (file path) to the clipboard
-		ClipWait, 2  ; Wait up to 2 seconds for the clipboard to contain data
-		Filepath := Clipboard
-		;MsgBox, % Filepath
-		Clipboard = %Filepath%
-		SplitPath, Filepath, OutFileName, OutDir  ; Split the file path into components
-		Run, %OutDir%  ; Open the folder containing the file
-	Return
-
-	^c::
-		Clipboard :=
-		Send ^c
-		Clipwait 2
-		Filepath := Clipboard
-		;MsgBox, % Filepath
-		Clipboard = %Filepath%
-	Return 
-
-	;Return 
-
-	y::Send {Alt}hffSegoe UI{Enter}
-
-	d::Send {Raw}%pwd_company%
-
-	v::openvis(URL_COMPANY, pwd_company)
-
-	m::
-	{
-	;sleep, 500
-	openvis(URL_COMPANY, pwd_company)
-	iq()
-	}return
-
-	;n::
-	;{
-	;salesparse(URL_COMPANY, pwd_company)
-	;}return
-
-	n::
-	{
-	Send c{Down}{Enter}cm
-	}Return
-
-	b::
-	{
-	Send {Alt}jph4.53{Enter}
-	;leafparse(URL_COMPANY, pwd_company)
-	}return
+;Image Embed
+img_ipynb()
+{
+	InputBox, ImageName, Fysh AHK UI, Enter Image Name,, 300, 100
+	if ErrorLevel {
+	    MsgBox, Operation cancelled.
+	} else {
+	    Send, {Raw}<center><img src="img/%ImageName%.png" alt="" height="400"/></center>
+	}
+}
 
 openvis(URL_COMPANY, pwd_company)
 {
@@ -478,15 +476,12 @@ leafparse(URL_COMPANY, pwd_company)
 		}
 	for index, element in Array
 		{
-			;openvis(URL_COMPANY, pwd_company)
-			;iq()
-			;sleep, 1000
 			SendInput %element%
 			Send {Enter}
 			sleep, 1000
 			Send 13{Enter}{Enter}{Enter}{Enter}03{Enter}
 			sleep, 5000
-			Send {PgUp}{PgUp}{PgUp}1{Enter}
+			Send {PgUp}{PgUp}{Enter}{Enter}
 		}
 }
 
@@ -500,14 +495,14 @@ memparse(URL_COMPANY, pwd_company)
 		}
 	for index, element in Array
 		{
-			openvis(URL_COMPANY, pwd_company)
-			iq()
-			sleep, 1000
 			SendInput %element%
 			Send {Enter}
 			sleep, 1000
-			Send 13{Enter}{Enter}{Enter}{Enter}07{Enter}
+			Send 13{Enter}{Enter}{Enter}{Enter}
+			;Send 07{Enter}
 			sleep, 500
+			;Send {PgUp}
+			Send {PgUp}{Enter}{Enter}
 		}
 }
 
@@ -521,28 +516,11 @@ salesparse(URL_COMPANY, pwd_company)
 		}
 	for index, element in Array
 		{
-			openvis(URL_COMPANY, pwd_company)
-			iq05()
-			sleep, 1000
 			SendInput %element%
 			Send {Enter}
 			sleep, 1000
 			Send 02{Enter}SAD{Enter}
 			sleep, 500
+			;Re-Add Rest
 		}
-}
-
-	
-#If
-CapsLock::Return ; Prevent Caps Lock from toggling when pressed alone
-
-;Image Embed
-img_ipynb()
-{
-	InputBox, ImageName, Fysh AHK UI, Enter Image Name,, 300, 100
-	if ErrorLevel {
-	    MsgBox, Operation cancelled.
-	} else {
-	    Send, {Raw}<center><img src="img/%ImageName%.png" alt="" height="400"/></center>
-	}
 }
