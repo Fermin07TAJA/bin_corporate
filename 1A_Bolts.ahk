@@ -48,7 +48,7 @@ PORTFOLIO := config.PORTFOLIO
 ^F12::
 MsgBox,"Main Reset"    
 Reload    
-Return
+return
 
 ;Caps Master		----------------------------------------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ return
 		Filepath := Clipboard
 		;MsgBox, % Filepath
 		Clipboard = %Filepath%
-	Return 
+	return 
 
 	^LButton::
 		Clipboard := ""  ; Clear the clipboard
@@ -110,7 +110,7 @@ return
 		Clipboard = %Filepath%
 		SplitPath, Filepath, OutFileName, OutDir  ; Split the file path into components
 		Run, %OutDir%  ; Open the folder containing the file
-	Return
+	return
 
 	^c::
 		Clipboard :=
@@ -119,15 +119,21 @@ return
 		Filepath := Clipboard
 		;MsgBox, % Filepath
 		Clipboard = %Filepath%
-	Return 
+	return 
 
-	;Return 
+	;return 
 
 	y::Send {Alt}hffSegoe UI{Enter}
 
 	d::Send {Raw}%pwd_company%
 
-	v::openvis(URL_COMPANY, pwd_company)
+	!v::openvis(URL_COMPANY, pwd_company)
+	v::
+	{
+		kpn := GetHighlightedText()
+		kpn := StrReplace(kpn, " ", "")
+		openvis(URL_COMPANY, pwd_company, kpn)
+	}return
 
 	m::
 	{
@@ -144,7 +150,7 @@ return
 	n::
 	{
 	Send c{Down}{Enter}cm
-	}Return
+	}return
 
 	b::
 	{
@@ -152,9 +158,10 @@ return
 	;leafparse()
 	memparse()
 	}return	
+
 #If
 
-CapsLock::Return ; Prevent Caps Lock from toggling when pressed alone
+CapsLock::return ; Prevent Caps Lock from toggling when pressed alone
 
 ;Alpha			----------------------------------------------------------------------------------------------------
 ^+8::
@@ -215,9 +222,9 @@ return
 ; Function to get highlighted text
 GetHighlightedText()
 {
-    Clipboard := ""           ; Empty the clipboard
-    Send, ^c                  ; Copy the highlighted text
-    ClipWait, 1               ; Wait for the clipboard to contain data
+    Clipboard := ""           ; Empty
+    Send, ^c                  ; Copy
+    ClipWait, 1               ; Wait
     return Clipboard
 }
 
@@ -268,7 +275,7 @@ LCtrl & RCtrl::
 
 	;MsgBox, % Filepath
 	Run Notepad.exe %Filepath%
-Return  
+return  
 
 LAlt & RAlt::
 	ClipSave := ClipboardAll
@@ -280,14 +287,14 @@ LAlt & RAlt::
 
 	;MsgBox, % Filepath
 	Run notepad.exe "%Filepath%"
-Return 
+return 
 
 ;OS Management		----------------------------------------------------------------------------------------------------
 
 ; Window on Top
 ^!SPACE::
 Winset, Alwaysontop, , A
-Return
+return
 
 ; Everything Search and 1A_Bolts Editor
 $Tab::                ;Trigger ($=no self-firing)
@@ -302,7 +309,7 @@ $Tab::                ;Trigger ($=no self-firing)
   }                      ;  ...Close 'Else' block
   KeyWait Tab         ;  Wait until released
   Send {Tab Up}       ;  Revert the pressed key
-Return  
+return  
 
 ; AltTab Replacement
 <!Tab::
@@ -396,7 +403,7 @@ tog()
 
 !F1::
 winmove()
-Return
+return
 
 winmove()
 {
@@ -444,15 +451,22 @@ img_ipynb()
 	}
 }
 
-openvis(URL_COMPANY, pwd_company)
+openvis(URL_COMPANY, pwd_company, kpn_in := "")
 {
-	Run % URL_COMPANY
-	sleep, 5000
-	Send {Raw}JOAQUP
-	Send {Enter}
-	Send {Raw}%pwd_company%
-	Send {Enter}
+    Run, %URL_COMPANY%
+    Sleep, 3000
+    Send, {Raw}JOAQUP
+    Send, {Enter}
+    Sleep, 500
+    Send, {Raw}%pwd_company%
+    Send, {Enter}
+    
+    if (kpn_in != "") {
+        Sleep, 3000
+        Send, IQ{Enter}1{Enter}%kpn_in%{Enter}
+    }
 }
+
 
 iq()
 {
